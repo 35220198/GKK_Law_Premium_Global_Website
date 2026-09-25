@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>G.K.K LAW — Admin Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="admin-body">
+<div class="admin-shell">
+  <aside class="admin-side">
+    <div class="admin-brand">
+      <div class="admin-brand-mark">⚖</div>
+      <div><strong>G.K.K LAW</strong><div class="admin-note">Website Admin Console</div></div>
+    </div>
+    <nav class="admin-nav" aria-label="Admin navigation">
+      <button class="active" data-tab="dashboard">Dashboard</button>
+      <button data-tab="enquiries">Enquiries</button>
+      <button data-tab="services">Services</button>
+      <button data-tab="settings">Settings</button>
+    </nav>
+    <p class="admin-note" style="margin-top:25px">This is a front-end administration interface designed for a static upload. It uses browser localStorage and does not provide secure server authentication.</p>
+    <a href="index.html" class="btn-gold" style="display:block;text-align:center;padding:12px;margin-top:20px;text-decoration:none">Open Website</a>
+  </aside>
+  <main class="admin-main">
+    <div class="admin-top">
+      <div>
+        <div class="section-kicker" style="color:#efd58f">Administration</div>
+        <h1 class="display-font" style="font-size:clamp(2rem,4vw,3.5rem);margin:.4rem 0">Command Centre</h1>
+        <div class="admin-note">Astra-inspired front-end dashboard for managing presentation data.</div>
+      </div>
+      <button class="admin-action" id="clearLocal">Reset Local Data</button>
+    </div>
+
+    <section class="admin-section active" id="tab-dashboard">
+      <div class="admin-grid">
+        <div class="admin-card"><div class="admin-note">Visitors</div><strong id="visitors">0</strong></div>
+        <div class="admin-card"><div class="admin-note">Enquiries stored</div><strong id="enquiryCount">0</strong></div>
+        <div class="admin-card"><div class="admin-note">Services</div><strong>7</strong></div>
+        <div class="admin-card"><div class="admin-note">AI Consultant</div><strong>ON</strong></div>
+      </div>
+      <div class="admin-table">
+        <table><thead><tr><th>System</th><th>Status</th><th>Mode</th></tr></thead>
+        <tbody>
+          <tr><td>Website frontend</td><td>Operational</td><td>Static / GitHub compatible</td></tr>
+          <tr><td>Enquiry delivery</td><td>Operational</td><td>Email client + WhatsApp fallback</td></tr>
+          <tr><td>AI Legal Consultant</td><td>Operational</td><td>On-page rule-based assistant</td></tr>
+          <tr><td>Official court links</td><td>Connected</td><td>External official portals</td></tr>
+        </tbody></table>
+      </div>
+    </section>
+
+    <section class="admin-section" id="tab-enquiries">
+      <div class="admin-card">
+        <h2 class="display-font">Local enquiry log</h2>
+        <p class="admin-note">The public form sends the enquiry through the visitor's email client. This local dashboard only stores optional browser-side test records if you add them here; it cannot receive submissions from other visitors without a backend.</p>
+        <button class="admin-action" id="addDemo">Add local test enquiry</button>
+      </div>
+      <div class="admin-table"><table><thead><tr><th>Name</th><th>Matter</th><th>Time</th></tr></thead><tbody id="enquiryRows"></tbody></table></div>
+    </section>
+
+    <section class="admin-section" id="tab-services">
+      <div class="admin-card">
+        <h2 class="display-font">Service presentation</h2>
+        <p class="admin-note">The homepage already contains the supplied seven practice areas. Use this panel for future front-end content controls.</p>
+        <div style="display:grid;gap:10px;margin-top:18px">
+          <input class="admin-input" value="Corporate & Commercial Law">
+          <input class="admin-input" value="Litigation & Dispute Resolution">
+          <input class="admin-input" value="Real Estate Law">
+          <input class="admin-input" value="Employment Law">
+          <input class="admin-input" value="Intellectual Property Law">
+          <input class="admin-input" value="Family Law">
+          <input class="admin-input" value="Succession Law">
+        </div>
+      </div>
+    </section>
+
+    <section class="admin-section" id="tab-settings">
+      <div class="admin-card">
+        <h2 class="display-font">Static deployment settings</h2>
+        <p class="admin-note">Upload <strong>index.html</strong>, <strong>styles.css</strong>, <strong>script.js</strong> and this <strong>admin.html</strong> together. No Cloudflare, Netlify or Vercel dependency is required for the front-end.</p>
+        <p class="admin-note">For a real multi-user admin login, enquiries database, file uploads, role permissions or AI API, a secure backend is required. Never place private API keys or administrator passwords in this static page.</p>
+      </div>
+    </section>
+  </main>
+</div>
+<script>
+(() => {
+ const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+ const key="gkkAdminEnquiries";
+ const get=()=>JSON.parse(localStorage.getItem(key)||"[]");
+ const save=x=>localStorage.setItem(key,JSON.stringify(x));
+ function render(){
+   $("#enquiryCount").textContent=get().length;
+   $("#visitors").textContent=Number(localStorage.getItem("gkkVisits")||0);
+   $("#enquiryRows").innerHTML=get().map(x=>`<tr><td>${x.name}</td><td>${x.matter}</td><td>${x.time}</td></tr>`).join("")||"<tr><td colspan='3'>No local test enquiries.</td></tr>";
+ }
+ $$("[data-tab]").forEach(b=>b.onclick=()=>{
+   $$("[data-tab]").forEach(x=>x.classList.remove("active"));b.classList.add("active");
+   $$(".admin-section").forEach(x=>x.classList.remove("active"));
+   $("#tab-"+b.dataset.tab).classList.add("active");
+ });
+ $("#addDemo").onclick=()=>{const a=get();a.unshift({name:"Demo Visitor",matter:"General Enquiry",time:new Date().toLocaleString()});save(a);render()};
+ $("#clearLocal").onclick=()=>{localStorage.removeItem(key);localStorage.removeItem("gkkVisits");render()};
+ render();
+})();
+</script>
+</body>
+</html>
