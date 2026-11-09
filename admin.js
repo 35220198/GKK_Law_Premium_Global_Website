@@ -8,7 +8,7 @@
   const $ = (s, r=document) => r.querySelector(s);
   const $$ = (s, r=document) => [...r.querySelectorAll(s)];
   const DEF = window.GKK_DEFAULTS;
-  const DEFAULT_HASH = "0c973c1c8f9aa338fe27a369c76b237af66c39d921e80f03ca4a4f8c22079e8e"; // salted sha-256
+  const DEFAULT_HASH = "c39889dabf2a604f47828353cf6da1a8514db686799771148a237dc2204773f6"; // salted sha-256
   const SALT = "gkk-admin|";
   const SESSION_MS = 2 * 60 * 60 * 1000;
 
